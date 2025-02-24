@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #111;
+            line-height: 1.5;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            width: 100%;
+            height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .input-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #ff9900; /* Amazon orange */
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background-color: #ff9900; /* Amazon orange */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-submit:hover {
+            background-color: #e88b00; /* Darker orange */
+        }
+        .forgot-password,
+        .create-account {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .forgot-password a,
+        .create-account a {
+            color: #007185; /* Amazon blue */
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .forgot-password a:hover,
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+        .error-messages {
+            list-style: none;
+            padding: 10px;
+            background-color: #ffebeb;
+            color: #d8000c;
+            border: 1px solid #ffbaba;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        /* Eye icon styles */
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+            font-size: 16px;
+            color: #aaa;
+        }
+        .toggle-password:hover {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <header class="login-header">
+            <div class="logo" style="background-image: url('{{ url_for('static', filename='images/amazon_logo.png') }}');"></div>
+        </header>
+        <main>
+            <h2>Sign-In</h2>
+            <!-- Display flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="error-messages">
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    <script>
+                        setTimeout(function() {
+                            document.querySelector('.error-messages').style.display = 'none';
+                        }, 3000);
+                    </script>
+                {% endif %}
+            {% endwith %}
+            <!-- Login Form -->
+            <form method="POST" action="{{ url_for('login') }}">
+                {{ form.hidden_tag() }} <!-- CSRF Token -->
+                <div class="input-container">
+                    <label for="identifier">Email or Mobile Phone Number</label>
+                    {{ form.identifier(id="identifier", placeholder="Email or Mobile Phone Number", value=request.form.get('identifier', ''), required=True, class="form-control") }}
+                </div>
+                <div class="input-container">
+                    <label for="password">Password</label>
+                    {{ form.password(id="password", placeholder="Password", required=True, class="form-control") }}
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                </div>
+                <button type="submit" class="btn-submit">Sign In</button>
+            </form>
+            <div class="forgot-password">
+                <p><a href="{{ url_for('forgot_password') }}">Forgot your password?</a></p>
+            </div>
+            <div class="create-account">
+                <p>New to Amazon? <a href="{{ url_for('signup') }}">Create an account</a></p>
+            </div>
+        </main>
+    </div>
+    <script>
+        // Function to toggle password visibility
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        }
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function (event) {
+            const identifier = document.getElementById('identifier').value.trim();
+            const password = document.getElementById('password').value.trim();
+            let errorMessage = '';
+            // Email validation
+            if (identifier.includes('@') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
+                errorMessage = 'Please enter a valid email address.';
+            }
+            // Password length validation
+            if (password.length < 8) {
+                errorMessage = 'Password must be at least 8 characters long.';
+            }
+            if (errorMessage) {
+                alert(errorMessage);
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

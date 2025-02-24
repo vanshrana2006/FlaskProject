@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #111;
+            line-height: 1.5;
+        }
+
+        .signup-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            width: 120px;
+            height: 40px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .error-messages {
+            list-style: none;
+            padding: 10px;
+            background-color: #ffebeb;
+            color: #d8000c;
+            border: 1px solid #ffbaba;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #ff9900; /* Amazon orange */
+        }
+
+        .signup-button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background-color: #ff9900; /* Amazon orange */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .signup-button:hover {
+            background-color: #e88b00; /* Darker orange */
+        }
+
+        .existing-account {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .existing-account a {
+            color: #007185; /* Amazon blue */
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .existing-account a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <header class="signup-header">
+            <div class="logo" style="background-image: url('{{ url_for('static', filename='images/amazon_logo.png') }}');"></div>
+        </header>
+        <main>
+            <h2>Create Account</h2>
+
+            <!-- Display flash messages (auto-hide after 3 seconds) -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="error-messages">
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    <script>
+                        setTimeout(function() {
+                            document.querySelector('.error-messages').style.display = 'none';
+                        }, 3000);
+                    </script>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Sign Up Form -->
+            <form method="POST" action="{{ url_for('signup') }}">
+                {{ form.hidden_tag() }} <!-- CSRF Token -->
+                <div class="input-container">
+                    {{ form.name.label }}
+                    {{ form.name(id="name", placeholder="Full Name", class="form-input") }}
+                </div>
+                <div class="input-container">
+                    {{ form.email.label }}
+                    {{ form.email(id="email", placeholder="Email", class="form-input") }}
+                </div>
+                <div class="input-container">
+                    {{ form.phone.label }}
+                    {{ form.phone(id="phone", placeholder="Phone Number (10 digits)", class="form-input") }}
+                </div>
+                <div class="input-container">
+                    {{ form.dob.label }}
+                    {{ form.dob(id="dob", class="form-input") }}
+                </div>
+                <div class="input-container">
+                    {{ form.gender.label }}
+                    {{ form.gender(id="gender", class="form-input") }}
+                </div>
+                <div class="input-container">
+                    {{ form.password.label }}
+                    {{ form.password(id="password", placeholder="Create Password", class="form-input") }}
+                </div>
+                <div class="input-container">
+                    {{ form.confirm_password.label }}
+                    {{ form.confirm_password(id="confirm_password", placeholder="Confirm Password", class="form-input") }}
+                </div>
+                <button type="submit" class="signup-button">Create Your Amazon Account</button>
+            </form>
+
+            <div class="existing-account">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Log In</a></p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirm_password').value.trim();
+            let errorMessage = '';
+
+            // Email format validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errorMessage = 'Please enter a valid email address.';
+            }
+            // Phone number validation (must be 10 digits)
+            else if (!/^\d{10}$/.test(phone)) {
+                errorMessage = 'Please enter a valid 10-digit phone number.';
+            }
+            // Password length validation
+            else if (password.length < 8) {
+                errorMessage = 'Password must be at least 8 characters long.';
+            }
+            // Password match validation
+            else if (password !== confirmPassword) {
+                errorMessage = 'Passwords do not match.';
+            }
+
+            if (errorMessage) {
+                alert(errorMessage);
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

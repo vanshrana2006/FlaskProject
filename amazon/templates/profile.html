@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Amazon</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #232f3e;
+            color: #fff;
+        }
+
+        .header .logo a {
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff9900;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            margin-left: 1rem;
+            font-size: 1rem;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content */
+        .profile-page {
+            display: flex;
+            margin: 1rem auto;
+            max-width: 1200px;
+        }
+
+        .sidebar {
+            width: 25%;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-card {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #232f3e;
+            font-size: 1rem;
+        }
+
+        .menu a:hover {
+            color: #ff9900;
+        }
+
+        .profile-content {
+            width: 75%;
+            padding-left: 1rem;
+        }
+
+        .profile-section {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-item label {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-item span {
+            color: #555;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #232f3e;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="/">Amazon</a>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="#">Orders</a>
+            <a href="#">Account</a>
+        </nav>
+    </header>
+
+    <main class="profile-page">
+        <aside class="sidebar">
+            <div class="user-card">
+                <img src="{{ url_for('static', filename='images/avtar.jpeg') }}" alt="User Avatar" class="avatar">
+                <h3>{{ user['name'] }}</h3>
+                <p>{{ user['email'] }}</p>
+            </div>
+            <ul class="menu">
+                <li><a href="#profile-info">Profile Information</a></li>
+                <li><a href="#orders">Your Orders</a></li>
+                <li><a href="#settings">Settings</a></li>
+                <li><a href="#" id="logout-btn">Logout</a></li>
+            </ul>
+        </aside>
+
+        <section class="profile-content">
+            <div class="profile-section" id="profile-info">
+                <h2>Profile Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Email:</label>
+                        <span>{{ user['email'] }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Phone:</label>
+                        <span>{{ user['phone'] }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Date of Birth:</label>
+                        <span>{{ user['dob'] }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Gender:</label>
+                        <span>{{ user['gender'] }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section" id="orders">
+                <h2>Your Orders</h2>
+                <p>No orders placed yet.</p>
+            </div>
+
+            <div class="profile-section" id="settings">
+                <h2>Settings</h2>
+                <p>Manage your account settings here.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Amazon. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Logout confirmation
+        document.getElementById('logout-btn').addEventListener('click', function () {
+            if (confirm("Do you wish to logout?")) {
+                window.location.href = "{{ url_for('logout') }}";
+            }
+        });
+    </script>
+</body>
+</html>

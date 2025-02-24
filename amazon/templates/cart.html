@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #232F3E;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* Cart Items */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-details h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .product-details p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #B12704;
+        }
+
+        .product-quantity {
+            width: 60px;
+            padding: 5px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .remove-item {
+            background-color: #FF9900;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .remove-item:hover {
+            background-color: #e88b00;
+        }
+
+        /* Cart Summary */
+        .cart-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .checkout-button {
+            background-color: #FF9900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .checkout-button:hover {
+            background-color: #e88b00;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #232F3E;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Shopping Cart</h1>
+    </header>
+    <main>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-summary">
+            <p>Total: ₹<span id="total-price">0.00</span></p>
+            <button class="checkout-button" onclick="location.href='{{ url_for('checkout') }}'">Proceed to Checkout</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Amazon</p>
+    </footer>
+    <script>
+        // Initialize cart if not already in localStorage
+        function initializeCart() {
+            if (!localStorage.getItem("cart")) {
+                localStorage.setItem("cart", JSON.stringify([])); // Initialize an empty cart
+            }
+        }
+
+        // Update the cart UI and display items
+        function updateCart() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let cartItemsContainer = document.getElementById("cart-items");
+            let totalPrice = 0;
+
+            cartItemsContainer.innerHTML = ''; // Clear the cart container
+
+            cart.forEach(item => {
+                // Ensure all required properties exist and are valid numbers
+                const itemName = item.name || 'Unnamed Product';
+                const itemPrice = parseFloat(item.price) || 0; // Parse price as float, default to 0
+                const itemQuantity = parseInt(item.quantity) || 1; // Parse quantity as integer, default to 1
+                const itemImage = item.image || 'static/default-image.jpg'; // Default image path
+
+                // Calculate total price for this item
+                totalPrice += itemPrice * itemQuantity;
+
+                // Add the item to the cart UI
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${itemImage}" alt="${itemName}" class="product-image">
+                        <div class="product-details">
+                            <h4>${itemName}</h4>
+                            <p>₹${itemPrice.toFixed(2)}</p>
+                            <input type="number" value="${itemQuantity}" class="product-quantity" min="1" onchange="updateQuantity('${itemName.replace(/'/g, "\\'")}', this.value)">
+                            <button class="remove-item" onclick="removeFromCart('${itemName.replace(/'/g, "\\'")}')">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Update the total price in the UI
+            const totalPriceElement = document.getElementById("total-price");
+            if (totalPriceElement) {
+                totalPriceElement.innerText = totalPrice.toFixed(2); // Format total price to two decimal places
+            }
+
+            // Update the cart item count in the UI
+            const cartCountElement = document.getElementById("cart-count");
+            if (cartCountElement) {
+                cartCountElement.innerText = cart.length;
+            }
+        }
+
+        // Remove item from the cart
+        function removeFromCart(itemName) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart = cart.filter(item => item.name !== itemName); // Filter out the item by name
+            localStorage.setItem("cart", JSON.stringify(cart)); // Update the cart in localStorage
+            updateCart(); // Update the UI
+        }
+
+        // Update the quantity of an item
+        function updateQuantity(itemName, newQuantity) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let item = cart.find(item => item.name === itemName);
+            if (item) {
+                item.quantity = parseInt(newQuantity) || 1; // Ensure quantity is a number and at least 1
+                localStorage.setItem("cart", JSON.stringify(cart)); // Update the cart in localStorage
+                updateCart(); // Update the UI
+            }
+        }
+
+        // Initialize cart when the page loads
+        initializeCart();
+        updateCart(); // Render the cart
+    </script>
+</body>
+</html>

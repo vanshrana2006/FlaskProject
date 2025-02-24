@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing - Amazon Clone</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .navbar {
+            height: 60px;
+            background-color: #0f1111;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .nav-logo img {
+            height: 50px;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 30px;
+            width: 400px;
+            height: 40px;
+            padding: 5px;
+        }
+
+        .search-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        .search-icon {
+            background-color: #febd68;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .cart {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 3px 7px;
+            font-size: 14px;
+        }
+
+        .hero-section {
+            background-image: url('https://source.unsplash.com/1600x600/?clothing,fashion');
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .shop-container {
+            display: flex;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 20%;
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .sidebar h2, .sidebar h3 {
+            margin-bottom: 10px;
+        }
+
+        .sidebar label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .shop-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            width: 80%;
+        }
+
+        .product {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+
+        .product img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .discount {
+            text-decoration: line-through;
+            color: red;
+            margin-left: 5px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .view-details {
+            background-color: #28a745;
+        }
+
+        .view-details:hover {
+            background-color: #1e7e34;
+        }
+
+        @media (max-width: 768px) {
+            .shop-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .shop-section {
+                width: 100%;
+            }
+
+            .nav-search {
+                width: 100%;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="nav-logo"><a href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Logo"></a></div>
+        <div class="nav-search">
+            <input type="text" class="search-input" placeholder="Search for clothes...">
+            <div class="search-icon">🔍</div>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="#">Electronics</a>
+            <a href="#">Clothing</a>
+            <a href="#">Books</a>
+            <a href="{{ url_for('cart') }}">Cart <span class="cart-count">0</span></a>
+        </div>
+    </div>
+
+    <div class="hero-section">Shop the Latest Fashion Trends</div>
+
+    <div class="shop-container">
+        <aside class="sidebar">
+            <h2>Filters</h2>
+            <label><input type="checkbox"> Men's Clothing</label>
+            <label><input type="checkbox"> Women's Clothing</label>
+            <label><input type="checkbox"> Kids' Wear</label>
+            <h3>Price Range</h3>
+            <label><input type="radio" name="price"> Under ₹500</label>
+            <label><input type="radio" name="price"> ₹500 - ₹1000</label>
+            <label><input type="radio" name="price"> Above ₹1000</label>
+        </aside>
+
+        <section class="shop-section">
+            <div class="product" data-name="Men's Casual Shirt" data-price="799">
+                <img src="static/images/c1.webp" alt="Shirt">
+                <h3>Men's Casual Shirt</h3>
+                <p>₹799 <span class="discount">₹999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+            
+            <div class="product" data-name="Women's T-Shirt" data-price="499">
+                <img src="static/images/c2.webp" alt="Women's T-Shirt">
+                <h3>Women's T-Shirt</h3>
+                <p>₹499 <span class="discount">₹699</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+            
+            <div class="product" data-name="Men's Formal Pants" data-price="899">
+                <img src="static/images/c3.jpg" alt="Men's Formal Pants">
+                <h3>Men's Formal Pants</h3>
+                <p>₹899 <span class="discount">₹1199</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+            
+            <div class="product" data-name="Women's Maxi Dress" data-price="1299">
+                <img src="static/images/c4.jpg" alt="Women's Maxi Dress">
+                <h3>Women's Maxi Dress</h3>
+                <p>₹1299 <span class="discount">₹1599</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Jacket" data-price="2499">
+                <img src="static/images/c5.webp" alt="Men's Jacket">
+                <h3>Men's Jacket</h3>
+                <p>₹2499 <span class="discount">₹2999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+            
+            <div class="product" data-name="Women's Hoodie" data-price="1299">
+                <img src="static/images/c6.jpg" alt="Women's Hoodie">
+                <h3>Women's Hoodie</h3>
+                <p>₹1299 <span class="discount">₹1599</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+            
+            <div class="product" data-name="Men's Jeans" data-price="1199">
+                <img src="static/images/c7.webp" alt="Men's Jeans">
+                <h3>Men's Jeans</h3>
+                <p>₹1199 <span class="discount">₹1499</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Women's Skirt" data-price="899">
+                <img src="static/images/c8.jpg" alt="Women's Skirt">
+                <h3>Women's Skirt</h3>
+                <p>₹899 <span class="discount">₹1199</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Sweatshirt" data-price="1499">
+                <img src="static/images/c9.webp" alt="Men's Sweatshirt">
+                <h3>Men's Sweatshirt</h3>
+                <p>₹1499 <span class="discount">₹1799</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+            
+            <div class="product" data-name="Women's Blouse" data-price="799">
+                <img src="static/images/c10.jpg" alt="Women's Blouse">
+                <h3>Women's Blouse</h3>
+                <p>₹799 <span class="discount">₹999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Polo Shirt" data-price="899">
+                <img src="static/images/c11.jpg" alt="Men's Polo Shirt">
+                <h3>Men's Polo Shirt</h3>
+                <p>₹899 <span class="discount">₹1099</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Women's Tunic Top" data-price="799">
+                <img src="static/images/c12.jpg" alt="Women's Tunic Top">
+                <h3>Women's Tunic Top</h3>
+                <p>₹799 <span class="discount">₹999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Shorts" data-price="699">
+                <img src="static/images/c14.jpg" alt="Men's Shorts">
+                <h3>Men's Shorts</h3>
+                <p>₹699 <span class="discount">₹899</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+            
+            <div class="product" data-name="Women's Leggings" data-price="799">
+                <img src="static/images/c15.jpg" alt="Women's Leggings">
+                <h3>Women's Leggings</h3>
+                <p>₹799 <span class="discount">₹999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Casual Jacket" data-price="1999">
+                <img src="static/images/c16.jpg" alt="Men's Casual Jacket">
+                <h3>Men's Casual Jacket</h3>
+                <p>₹1999 <span class="discount">₹2499</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Women's Sweatpants" data-price="799">
+                <img src="static/images/c17.jpg" alt="Women's Sweatpants">
+                <h3>Women's Sweatpants</h3>
+                <p>₹799 <span class="discount">₹999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Tracksuit" data-price="1599">
+                <img src="static/images/c18.jpg" alt="Men's Tracksuit">
+                <h3>Men's Tracksuit</h3>
+                <p>₹1599 <span class="discount">₹1999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Women's Sweater" data-price="999">
+                <img src="static/images/c19.jpg" alt="Women's Sweater">
+                <h3>Women's Sweater</h3>
+                <p>₹999 <span class="discount">₹1199</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Athletic Wear" data-price="1299">
+                <img src="static/images/c20.jpg" alt="Men's Athletic Wear">
+                <h3>Men's Athletic Wear</h3>
+                <p>₹1299 <span class="discount">₹1599</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Women's Nightwear" data-price="799">
+                <img src="static/images/c21.jpg" alt="Women's Nightwear">
+                <h3>Women's Nightwear</h3>
+                <p>₹799 <span class="discount">₹999</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        
+            <div class="product" data-name="Men's Fitness Shorts" data-price="599">
+                <img src="static/images/c22.jpg" alt="Men's Fitness Shorts">
+                <h3>Men's Fitness Shorts</h3>
+                <p>₹599 <span class="discount">₹799</span></p>
+                <button class="button add-to-cart">Add to Cart</button>
+                <button class="button view-details">View Details</button>
+            </div>
+        </section>
+        
+        
+    </div>
+
+    <script>
+        document.querySelectorAll("input[name='price']").forEach(input => {
+            input.addEventListener("change", function() {
+                let selectedPriceRange = this.value;
+                filterByPrice(selectedPriceRange);
+            });
+        });
+
+        function filterByPrice(range) {
+            const products = document.querySelectorAll(".product");
+            products.forEach(product => {
+                let price = parseInt(product.getAttribute("data-price"));
+                switch(range) {
+                    case "Under ₹500":
+                        if (price < 500) {
+                            product.style.display = "block";
+                        } else {
+                            product.style.display = "none";
+                        }
+                        break;
+                    case "₹500 - ₹1000":
+                        if (price >= 500 && price <= 1000) {
+                            product.style.display = "block";
+                        } else {
+                            product.style.display = "none";
+                        }
+                        break;
+                    case "Above ₹1000":
+                        if (price > 1000) {
+                            product.style.display = "block";
+                        } else {
+                            product.style.display = "none";
+                        }
+                        break;
+                    default:
+                        product.style.display = "block"; // Display all products if no filter is selected
+                        break;
+                }
+            });
+        }
+
+        document.querySelectorAll(".add-to-cart").forEach(button => {
+            button.addEventListener("click", function() {
+                let product = this.closest(".product");
+                let name = product.getAttribute("data-name");
+                let price = product.getAttribute("data-price");
+                let image = product.querySelector("img").src;
+
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart.push({ name, price, image });
+                localStorage.setItem("cart", JSON.stringify(cart));
+
+                updateCartCount();
+                alert(name + " added to cart!");
+            });
+        });
+
+        document.querySelectorAll(".view-details").forEach(button => {
+            button.addEventListener("click", function() {
+                let product = this.closest(".product");
+                let name = product.getAttribute("data-name");
+                let price = product.getAttribute("data-price");
+
+                localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
+                window.location.href = "product-details.html";
+            });
+        });
+
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            document.querySelector(".cart-count").innerText = cart.length;
+        }
+
+        updateCartCount();
+    </script>
+
+</body>
+</html>

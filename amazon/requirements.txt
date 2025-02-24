@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Werkzeug
+python-dotenv
+Flask-WTF
+email
+openai

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom Styles -->
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        /* Header Section */
+        .header {
+            background-color: #232f3e;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        /* Main Content */
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .content {
+            padding: 2rem;
+            text-align: center;
+        }
+        .content h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #232f3e;
+        }
+        .content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        .total-amount {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #B12704; /* Amazon's signature orange-red color */
+        }
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fff;
+            background-color: #ff9900; /* Amazon's yellow-orange button color */
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #e88b00; /* Darker shade for hover effect */
+        }
+        /* Footer */
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #777;
+        }
+        .footer a {
+            color: #007185; /* Amazon's link blue */
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Thank You for Shopping with Us!</h1>
+    </div>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: #28a745;"></i>
+            <h1>Thank You for Your Order!</h1>
+            <p>Your order has been successfully placed.</p>
+            <p>Total Price: ₹{{ total_price }}</p>
+            <p>Delivery Charges: 
+                {% if delivery_charges == 0 %}
+                    Free
+                {% else %}
+                    ₹{{ delivery_charges }}
+                {% endif %}
+            </p>
+            <p class="total-amount">Grand Total: ₹{{ grand_total }}</p>
+            <a href="{{ url_for('index') }}" class="btn">Return to Home</a>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <p>Need help? Visit our <a href="#">Help Center</a> or contact us.</p>
+    </div>
+</body>
+</html>
