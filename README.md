@@ -16,53 +16,24 @@ Security: CSRF Protection, Password Hashing
 Email: SMTP for OTP verification
 Installation
 Clone the repository
-
-bash
-Copy
-Edit
 git clone https://github.com/vanshrana2006/FlaskProject
-cd flask-ecommerce
 Create a virtual environment
-
-bash
-Copy
-Edit
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 Install dependencies
-
-nginx
-Copy
-Edit
 pip install -r requirements.txt
 Set up environment variables
 Create a .env file and add:
-
-ini
-Copy
-Edit
 FLASK_SECRET_KEY=your_secret_key
 EMAIL_ADDRESS=your_email@gmail.com
 EMAIL_PASSWORD=your_email_password
 OPENAI_API_KEY=your_openai_api_key
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 Initialize the database
-
-nginx
-Copy
-Edit
 flask db upgrade  # If using Flask-Migrate
 Run the application
-
-nginx
-Copy
-Edit
 python app.py
 Open in browser
-
-cpp
-Copy
-Edit
 http://127.0.0.1:5000
 Usage
 Sign up with name, email, phone, DOB, and gender.
